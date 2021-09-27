@@ -106,7 +106,7 @@ class AdminExistsValidator implements IValidator {
     @Override
     public boolean IsValid(String input) {
 
-        if(input.isEmpty()) {
+        if(input.isEmpty() || input.matches("[Nn,Нн]\\w*")) {
             Exist = false;
             return true;
         }
@@ -174,7 +174,7 @@ public class InputDevice {
         questions.add(new quiz("Форма обучения " + FormOfEducation.GetStringValues(), new FormOfEducationValidator(), "foedu", false));
         questions.add(new quiz("Семестр " + Semester.GetStringValues(), new SemesterValidator(), "sem", true));
         questions.add(new quiz("У группы есть админ? Если нет, введите пустую строку" + Person.ifPersonExists(), new AdminExistsValidator() , "aExs", true));
-        questions.add(new quiz("Имя админа группы(Фамилия Имя)", new AdminNameValidator(), "aName", true));
+        questions.add(new quiz("Имя админа группы(Фамилия Имя)", new AdminNameValidator(), "aName", false));
         questions.add(new quiz("Серия и номер паспорта(пример: 1234 123456) админа группы", new AdminPassportValidator(), "passport", false));
         questions.add(new quiz("Введите координаты в формате X(0,0); Y(0); Z(-1,0)", new AdminLocationValidator(), "aCoords", false));
 
@@ -274,7 +274,7 @@ public class InputDevice {
 
         AdminExistsValidator admValid = (AdminExistsValidator)(questions.get(5).validator);
 
-        if (questions.get(5).answer != null && admValid.getExist()) {
+        if (questions.get(5).answer != null && admValid.getExist() && questions.get(5).answer.matches("[Nn,Нн]\\w*")) {
             if (GroupElement.getGroupAdmin() == null) {
                 GroupElement.setGroupAdmin(new Person());
             }
@@ -537,7 +537,7 @@ public class InputDevice {
         Person Admin = null;
         AdminExistsValidator admValid = (AdminExistsValidator)(questions.get(5).validator);
 
-        if (questions.get(5).answer != null && admValid.getExist()) {
+        if (questions.get(5).answer != null && admValid.getExist() && !questions.get(5).answer.matches("[Nn,Нн]\\w*")) {
             Admin = new Person();
             Admin.setName(questions.get(6).answer);
             if(questions.get(7).answer.equals("null") || questions.get(7).answer.isEmpty()) {
