@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.PortUnreachableException;
 import java.util.InputMismatchException;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,7 +28,13 @@ public class Client {
     public void start() throws IOException {
         System.out.println("Готов начать работу, уважаемый пекарь");
         Scanner scanner = new Scanner(System.in);
-        String line = scanner.nextLine().trim();
+        String line = "";
+        try {
+            line = scanner.nextLine().trim();
+        } catch (NoSuchElementException e) {
+            System.out.println(e);
+        }
+
 
         String reply = null;
         while (!line.equals("exit")) {
